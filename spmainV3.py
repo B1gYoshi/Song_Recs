@@ -13,9 +13,6 @@ from spotipy.oauth2 import SpotifyClientCredentials
 # CLIENT_ID = your client ID for the spotify api project
 # CLIENT_SECRET = your client secret for the spotify api project
 
-CLIENT_ID = '07dc1690db364518a6b506c245e3483f'
-CLIENT_SECRET = '76f595c486b74022acc68e2d636e6b11'
-
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
 
 user_input = input("Enter a song and its artist: ")
