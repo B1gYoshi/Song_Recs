@@ -6,3 +6,5 @@ Versions 1 and 2 are shortcut/test ways of doing it, as they use shortcut statis
 These are the versions I came up with when learning how to use python and the spotify api.
 
 Version 3 is slightly better.
+
+**Need python, spotipy (python package), and spotify client ID and client Secret from spotify dev tools
