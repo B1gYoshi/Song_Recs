@@ -7,4 +7,6 @@ These are the versions I came up with when learning how to use python and the sp
 
 Version 3 is slightly better.
 
+The process can definitly be improved, but I will likely move on.
+
 **Need python, spotipy (python package), and spotify client ID and client Secret from spotify dev tools
