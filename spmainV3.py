@@ -282,7 +282,6 @@ for i in range (0, len(sorted_zd_list)):
 
 sorted_z_dict = sorted(avg_z_dict.items(),  key=lambda x: x[1])
 
-print(sorted_z_dict)
 
 print(len(sorted_z_dict))
 
