@@ -1,17 +1,36 @@
 '''
+Author: Neel Joshi
 
-- changed stats
+*flawed version
+
+General outline-
+
+- get user input for track name and artist
+- confirm if the track is correct-- else keep going through searches
+
+- get track audio features
+
+- classify song under genre(s)
+
+- for all genres, for songs in playlists, extract song features for all songs
+- find the mean and std dev for each feature
+- find the z scores for the features of the given songs and for each feature of each song
+- find the avg z score of each feature of the given song and the other songs
+- sort the avg z scores
+
+- output 50 lowest z score avgs
 
 '''
 
-#find way to import client_id and client_secret from another file
 
 import spotipy 
 import math
 from spotipy.oauth2 import SpotifyClientCredentials
 
+#*****************************
 # CLIENT_ID = your client ID for the spotify api project
 # CLIENT_SECRET = your client secret for the spotify api project
+#*****************************
 
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
 
@@ -47,10 +66,6 @@ if (i == 10):
 artist_id = song_info["artists"][0]["id"]
 
 song_features = spotify.audio_features(song_id)[0]
-
-
-#print (song_analysis)
-
 
 genres = spotify.artist(artist_id)["genres"]
 print(genres)
@@ -106,16 +121,6 @@ tempo = []
 
 
 mean_distance = [0,0,0,0,0,0,0,0,0]
-
-
-
-#TESTING WITH ONE GENRE
-
-#genre_specific_playlist = spotify.search(q = genres[0], type = "playlist", limit = 50, offset=0)
-
-#playlist_1 = genre_specific_playlist["playlists"]["items"][10]["id"]
-
-#print(playlist_1)
 
 songs = []
 song_count = 0;
@@ -197,6 +202,7 @@ for t in range (0, 9):
     mean_distance[t] /= song_count
 
 
+#takes std dev of the features
 stdev_distance = [0,0,0,0,0,0,0,0,0]
 
 

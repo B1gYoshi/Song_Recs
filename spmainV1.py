@@ -1,34 +1,35 @@
 '''
 
-Author: Beeg Yoshi
+Author: Neel Joshi
 
-The plan is simple
+*flawed version
 
-- get user input for track name
+General outline-
+
+- get user input for track name and artist
 - confirm if the track is correct-- else keep going through searches
 
-- extract important track data 
-    - genre**
+- get track audio features
 
-- get mean and std dev of difference from 
+- classify song under genre(s)
 
+- for all genres, for songs in playlists, take difference between song features and given features
+- find the mean and std dev for the differences between each feature
+- find the z scores for each feature of each song
+- get avg z scores for all the features for each song
 
--do search based on genres extracted
-TBD
-
+- output 50 lowest z score avgs
 '''
 
-#change from mac
-#another change from mac
-
-#find way to import client_id and client_secret from another file
 
 import spotipy
 import math
 from spotipy.oauth2 import SpotifyClientCredentials
 
+#*****************************
 # CLIENT_ID = your client ID for the spotify api project
 # CLIENT_SECRET = your client secret for the spotify api project
+#*****************************
 
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
 
@@ -65,17 +66,11 @@ artist_id = song_info["artists"][0]["id"]
 
 song_features = spotify.audio_features(song_id)[0]
 
-
-#print (song_analysis)
-
-
 genres = spotify.artist(artist_id)["genres"]
 print(genres)
 
 #check with user if they like the genres
-
 j = 0
-
 while j < len(genres) :
 
     valid_genre = int(input(genres[j] + " <- does this genre describe your song (y=1, n=0): "))
@@ -125,21 +120,10 @@ tempo = []
 mean_distance = []
 for t in range (0, 9): mean_distance.append(0)
 
-
-#TESTING WITH ONE GENRE
-
-#genre_specific_playlist = spotify.search(q = genres[0], type = "playlist", limit = 50, offset=0)
-
-#playlist_1 = genre_specific_playlist["playlists"]["items"][10]["id"]
-
-#print(playlist_1)
-
 songs = []
 song_count = 0;
 
-#at least one of the artists works has to be in the playlist 
-
-#NONE TYPE ERROR IN INNER 3RD LOOP
+#maybe at least one of the artists works has to be in the playlist (possible feature)
 
 for x in range(0, len(genres)): #for all genres
 
@@ -161,6 +145,7 @@ for x in range(0, len(genres)): #for all genres
         if playlist_size > 20: playlist_size = 20
 
         for k in range (0, playlist_size): # for all songs in that playlist
+
             try:
                 temp_song_id = playlist_items["items"][k]["track"]["id"]
             except:
@@ -214,11 +199,10 @@ print(song_count)
 for t in range (0, 9):
     mean_distance[t] /= song_count
 
-
-#Lol this isn't normal distribution– its skewed left or right but whatever
-
 stdev_distance = []
 for i in range (0,9): stdev_distance.append(0)
+
+#take std dev of distances
 
 for i in range (0, song_count):
 
@@ -263,6 +247,8 @@ sorted_z_dict = sorted(z_dict.items(), key=lambda x: x[1])
 
 print(len(sorted_z_dict))
 
+
+#print the first 50 songs
 sorted_z_list = list(sorted_z_dict)[:50]
 
 for x in sorted_z_list:
