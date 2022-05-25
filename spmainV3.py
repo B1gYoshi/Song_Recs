@@ -1,17 +1,36 @@
 '''
+Author: Neel Joshi
 
-- changed stats
+*hopefully not too flawed version
+
+General outline-
+
+- get user input for track name and artist
+- confirm if the track is correct-- else keep going through searches
+
+- get track audio features
+
+- classify song under genre(s)
+
+- for all genres, for songs in playlists, extract song features for all songs
+- find the mean and std dev for each feature
+- subtract the z scores for the features of the given songs from the z scores for each feature of each song
+- rank each a score difference in ascending order
+- find the avg rank of features for all songs
+- sort the avg rank of features
+
+- output 50 lowest aavg ranks
 
 '''
- 
-#find way to import client_id and client_secret from another file
 
 import spotipy
 import math
 from spotipy.oauth2 import SpotifyClientCredentials
 
+#*****************************
 # CLIENT_ID = your client ID for the spotify api project
 # CLIENT_SECRET = your client secret for the spotify api project
+#*****************************
 
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
 
@@ -47,10 +66,6 @@ if (i == 10):
 artist_id = song_info["artists"][0]["id"]
 
 song_features = spotify.audio_features(song_id)[0]
-
-
-#print (song_analysis)
-
 
 genres = spotify.artist(artist_id)["genres"]
 print(genres)
@@ -187,8 +202,8 @@ for t in range (0, 9):
     mean_distance[t] /= song_count
 
 
+#takes std dev of the data
 stdev_distance = [0,0,0,0,0,0,0,0,0]
-
 
 for i in range (0, song_count):
 
@@ -231,6 +246,7 @@ zt_dict = {}
 
 avg_z_dict = {}
 
+#finding difference between given z score and song z score for each feature of each song
 for i in range (0, song_count):
 
     zd  = (danceability[i] - mean_distance[0]) / stdev_distance[0] 
@@ -255,7 +271,7 @@ for i in range (0, song_count):
 
     avg_z_dict[songs[i]] = 1
 
-
+#sorting the difference and ranking
 sorted_zd_list  = list(sorted(zd_dict.items(),  key=lambda x: x[1]))
 sorted_ze_list  = list(sorted(ze_dict.items(),  key=lambda x: x[1]))
 sorted_zl_list  = list(sorted(zl_dict.items(),  key=lambda x: x[1]))
@@ -266,6 +282,7 @@ sorted_zli_list = list(sorted(zli_dict.items(), key=lambda x: x[1]))
 sorted_zv_list  = list(sorted(zv_dict.items(),  key=lambda x: x[1]))
 sorted_zt_list  = list(sorted(zt_dict.items(),  key=lambda x: x[1]))
 
+#finding avg rank
 for i in range (0, len(sorted_zd_list)):
     
     avg_z_dict[sorted_zd_list[i][0]] = i + avg_z_dict[sorted_zd_list[i][0]]
@@ -279,12 +296,14 @@ for i in range (0, len(sorted_zd_list)):
     avg_z_dict[sorted_zt_list[i][0]] = i + avg_z_dict[sorted_zt_list[i][0]]
 
 
-
+#sorting avg rank
 sorted_z_dict = sorted(avg_z_dict.items(),  key=lambda x: x[1])
 
 
 print(len(sorted_z_dict))
 
+
+#printing lowest 50 avg ranks
 sorted_z_list = list(sorted_z_dict)[:50]
 
 for x in sorted_z_list:
