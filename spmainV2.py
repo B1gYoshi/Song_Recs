@@ -148,7 +148,7 @@ for x in range(0, len(genres)): #for all genres
             try:
                 temp_song_id = playlist_items["items"][k]["track"]["id"]
             except:
-                print("bruh")
+                print("Error in getting song")
                 continue
 
             if temp_song_id not in songs:
@@ -190,7 +190,7 @@ for x in range(0, len(genres)): #for all genres
 
                     song_count = song_count + 1
                 except:  #POSSIBLE PROBLEM HERE
-                    print("problem accessing one of the features- feature count wack")
+                    print("problem accessing one of the features-> might affect the list of features")
                     songs.pop(len(songs)-1)
                     continue
         

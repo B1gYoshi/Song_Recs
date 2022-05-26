@@ -149,7 +149,7 @@ for x in range(0, len(genres)): #for all genres
             try:
                 temp_song_id = playlist_items["items"][k]["track"]["id"]
             except:
-                print("bruh")
+                print("Error in getting song")
                 continue
             if temp_song_id not in songs:
                 songs.append(temp_song_id)
