@@ -32,6 +32,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 # CLIENT_SECRET = your client secret for the spotify api project
 #*****************************
 
+
 spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
 
 user_input = input("Enter a song and its artist: ")
@@ -123,6 +124,7 @@ tempo = []
 mean_distance = [0,0,0,0,0,0,0,0,0]
 
 songs = {}
+#songs = []
 song_count = 0;
 
 for x in range(0, len(genres)): #for all genres
@@ -153,11 +155,13 @@ for x in range(0, len(genres)): #for all genres
 
             if temp_song_id not in songs:
                 songs[temp_song_id] = 0
+                #songs.append(temp_song_id)
 
                 try:
                     temp_features = spotify.audio_features(temp_song_id)[0]
                 except:
                     del songs[temp_song_id]
+                    #songs.pop(len(songs)-1)
                     continue
                 
                 try:
@@ -192,12 +196,14 @@ for x in range(0, len(genres)): #for all genres
                 except:  #POSSIBLE PROBLEM HERE
                     print("problem accessing one of the features-> might affect the list of features")
                     del songs[temp_song_id]
+                    #songs.pop(len(songs)-1)
                     continue
         
         
     print("----")
 
 songs = list(songs)
+print(songs)
 print(song_count)
 for t in range (0, 9):
     mean_distance[t] /= song_count
@@ -305,8 +311,13 @@ print(len(sorted_z_dict))
 
 
 #printing lowest 50 avg ranks
-sorted_z_list = list(sorted_z_dict)[:50]
+sorted_z_list = list(sorted_z_dict)[:60]
+
+printed_songs = []
 
 for x in sorted_z_list:
     current_rec = spotify.track(x[0], market="US")
-    print(current_rec["name"]+ " " + current_rec["artists"][0]["name"])
+    current_song = current_rec["name"]+ " " + current_rec["artists"][0]["name"]
+    if current_song not in printed_songs:
+        print(current_song)
+        printed_songs.append(current_song)
