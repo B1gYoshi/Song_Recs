@@ -122,7 +122,7 @@ tempo = []
 
 mean_distance = [0,0,0,0,0,0,0,0,0]
 
-songs = []
+songs = {}
 song_count = 0;
 
 for x in range(0, len(genres)): #for all genres
@@ -152,12 +152,12 @@ for x in range(0, len(genres)): #for all genres
                 continue
 
             if temp_song_id not in songs:
-                songs.append(temp_song_id)
+                songs[temp_song_id] = 0
 
                 try:
                     temp_features = spotify.audio_features(temp_song_id)[0]
                 except:
-                    songs.pop(len(songs)-1)
+                    del songs[temp_song_id]
                     continue
                 
                 try:
@@ -191,12 +191,13 @@ for x in range(0, len(genres)): #for all genres
                     song_count = song_count + 1
                 except:  #POSSIBLE PROBLEM HERE
                     print("problem accessing one of the features-> might affect the list of features")
-                    songs.pop(len(songs)-1)
+                    del songs[temp_song_id]
                     continue
         
         
     print("----")
 
+songs = list(songs)
 print(song_count)
 for t in range (0, 9):
     mean_distance[t] /= song_count
